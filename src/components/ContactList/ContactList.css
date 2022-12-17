@@ -1,0 +1,29 @@
+.contact-list {
+    list-style: none;
+    margin: 2em 0;
+}
+
+.contact-list li {
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr 4fr 1.5fr;
+    place-items: center;
+    transition: var(--main-transition);
+}
+
+.contact-list li:not(.list-header):hover {
+    background-color: var(--light-bg);
+    cursor: pointer;
+}
+
+.list-header {
+    background-color: var(--primary);
+    color: #FFFFFF;
+    font-weight: 700;
+}
+
+.contact-list span {
+    padding: 5px 10px;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    overflow: hidden;
+}
