@@ -22,7 +22,7 @@ export default function validate(value, name) {
             (x[4] ? `-${x[4]}` : "") +
             (x[5] ? `-${x[5]}` : "");
     } else {
-        result = value.replace(/\W|\d/g, "").trim();
+        result = value.replace(/\d/g, "").trim();
     }
 
     return result;
