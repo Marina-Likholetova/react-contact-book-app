@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import { Button, Stack, TextField } from "@mui/material";
 import validate from "../../utils/validate";
@@ -30,77 +30,73 @@ const initialState = {
 
 
 
-export default class ContactForm extends Component {
-    constructor(props) {
-        super(props);
-        this.state = initialState;
-    }
+export default function ContactForm({ addContact, toggleShowForm }) {
+    const [inputs, setInputs] = useState(initialState);
+    const isDisableSubmit = !Object.values(inputs).every((input) => input.value && !input.error);
 
-    onReset = () => {
-        this.setState(initialState);
-        this.props.toggleShowForm();
+    const onReset = () => {
+        setInputs(initialState);
+        toggleShowForm();
     };
 
-    onChange = ({ target: { name, value } }) => {
-        this.setState({
+    const onChange = ({ target: { name, value } }) => {
+        setInputs({
+            ...inputs,
             [name]: {
-                ...this.state[name],
+                ...inputs[name],
                 value: validate(value, name),
                 error: false,
             },
         });
     };
 
-    onSubmit = (e) => {
+    const onSubmit = (e) => {
         e.preventDefault();
-        const { firstName, lastName, phone } = this.state;
+        const { firstName, lastName, phone } = inputs;
 
         if (phone.value.length >= 19) {
-            this.props.addContact(firstName.value, lastName.value, phone.value);
-            this.onReset();
+            addContact(firstName.value, lastName.value, phone.value);
+            onReset();
         } else {
-            this.setState({
+            setInputs({
+                ...inputs,
                 phone: { ...phone, error: true },
             });
         }
     };
 
-    render() {
-        const isDisableOk = !Object.values(this.state).every((item) => item.value && !item.error);
-        return (
-            <>
-                <form action="" onSubmit={this.onSubmit} onReset={this.onReset}>
-                    <Box sx={{ mt: 2, mb: 2, "& .MuiTextField-root": { m: 1, width: "25ch" } }}>
-                        {Object.values(this.state).map((input) => (
-                            <TextField
-                                {...input}
-                                onChange={this.onChange}
-                                variant="outlined"
-                                helperText={input.error ? "Phone number should be 12 digit number" : ""}
-                                required
-                            />
-                        ))}
-                    </Box>
+    return (
+        <form action="" onSubmit={onSubmit} onReset={onReset}>
+            <Box sx={{ mt: 2, mb: 2, "& .MuiTextField-root": { m: 1, width: "25ch" } }}>
+                {Object.values(inputs).map((input) => (
+                    <TextField
+                        {...input}
+                        key={input.name}
+                        onChange={onChange}
+                        variant="outlined"
+                        helperText={input.error ? "Phone number should be 12 digit number" : ""}
+                        required
+                    />
+                ))}
+            </Box>
 
-                    <Stack direction="row" spacing={2}>
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="success"
-                            disabled={isDisableOk}
-                        >
-                            Ok
-                        </Button>
-                        <Button
-                            type="reset"
-                            variant="contained"
-                            color="error"
-                        >
-                            Cancel
-                        </Button>
-                    </Stack>
-                </form>
-            </>
-        );
-    }
+            <Stack direction="row" spacing={2}>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    color="success"
+                    disabled={isDisableSubmit}
+                >
+                    Ok
+                </Button>
+                <Button
+                    type="reset"
+                    variant="contained"
+                    color="error"
+                >
+                    Cancel
+                </Button>
+            </Stack>
+        </form>
+    );
 }

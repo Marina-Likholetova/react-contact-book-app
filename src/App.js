@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { Button } from "@mui/material";
 import "./App.css";
 import ContactForm from "./components/ContactForm/ContactForm";
@@ -9,68 +9,51 @@ import contactsDb from "./data/contactsData";
 
 
 
-export default class App extends Component {
-    constructor() {
-        super();
-        this.state = {
-            contacts: contactsDb || [],
-            isShowForm: false,
-        };
-    }
+export default function App() {
+    const [contacts, setContacts] = useState(contactsDb);
+    const [isShowForm, setIsShowForm] = useState(false);
 
-    addContact = (firstName, lastName, phone) => {
-        this.setState((state) => ({
-            contacts: [
-                ...state.contacts,
-                {
-                    firstName,
-                    lastName,
-                    phone,
-                    id: generateRandomNumber(),
-                },
-            ],
-        }));
+    const addContact = (firstName, lastName, phone) => {
+        setContacts((prev) => [
+            ...prev,
+            {
+                firstName,
+                lastName,
+                phone,
+                id: generateRandomNumber(),
+            },
+        ]);
     };
 
-    deleteContact = (id) => {
-        this.setState((state) => ({
-            contacts: state.contacts.filter((contact) => contact.id !== id),
-        }));
+    const deleteContact = (id) => {
+        setContacts(contacts.filter((contact) => contact.id !== id));
     };
 
-    toggleShowForm = () => {
-        this.setState((state) => ({
-            isShowForm: !state.isShowForm,
-        }));
+    const toggleShowForm = () => {
+        setIsShowForm(!isShowForm);
     };
 
-    onShowForm = () => {
-        this.toggleShowForm();
-    };
-
-    render() {
-        return (
-            <div className="container">
-                <h1 className="title">Contacts</h1>
-                <ContactList
-                    list={this.state.contacts}
-                    listHeaders={listHeaders}
-                    onDeleteContact={this.deleteContact}
-                />
-                <Button
-                    variant="contained"
-                    disabled={this.state.isShowForm}
-                    onClick={this.onShowForm}
-                >
-                    Add Contact
-                </Button>
-                {this.state.isShowForm && (
-                    <ContactForm
-                        addContact={this.addContact}
-                        toggleShowForm={this.toggleShowForm}
-                    />
-                )}
-            </div>
-        );
-    }
+    return (
+        <div className="container">
+            <h1 className="title">Contacts</h1>
+            <ContactList
+                list={contacts}
+                listHeaders={listHeaders}
+                deleteContact={deleteContact}
+            />
+            <Button
+                variant="contained"
+                disabled={isShowForm}
+                onClick={toggleShowForm}
+            >
+                Add Contact
+            </Button>
+            {isShowForm && (
+                <ContactForm
+                    addContact={addContact}
+                    toggleShowForm={toggleShowForm}
+                />)
+            }
+        </div>
+    );
 }
