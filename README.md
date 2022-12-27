@@ -1,7 +1,7 @@
 # React Phone book
 A simple Phone book app built with Create React App.
 
-This project was created by using Class components.
+This project was created by using Functional Components.
 
 <!-- **live demo:** <a href=""></a> -->
 
