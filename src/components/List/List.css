@@ -1,16 +1,16 @@
-.contact-list {
+.list {
     list-style: none;
     margin: 2em 0;
 }
 
-.contact-list li {
+.list li {
     display: grid;
     grid-template-columns: 1fr 2fr 2fr 4fr 1.5fr;
     place-items: center;
     transition: var(--main-transition);
 }
 
-.contact-list li:not(.list-header):hover {
+.list li:not(.list-header):hover {
     background-color: var(--light-bg);
     cursor: pointer;
 }
@@ -21,7 +21,7 @@
     font-weight: 700;
 }
 
-.contact-list span {
+.list span {
     padding: 5px 10px;
     text-overflow: ellipsis;
     max-width: 100%;

@@ -1,29 +1,58 @@
-import React from "react";
+import React, { useState } from "react";
+import { Button } from "@mui/material";
+import ContactForm from "../ContactForm/ContactForm";
+import List from "../List/List";
 import generateRandomNumber from "../../utils/generateRandomNumber";
-import ContactItem from "../ContactItem/ContactItem";
-import "./ContactList.css";
+import listHeaders from "../../data/listData";
+import contactsDb from "../../data/contactsData";
 
 
 
+export default function ContactList() {
+    const [contacts, setContacts] = useState(contactsDb);
+    const [isShowForm, setIsShowForm] = useState(false);
 
-export default function ContactList({ list, listHeaders, deleteContact }) {
+    const addContact = (firstName, lastName, phone) => {
+        setContacts((prev) => [
+            ...prev,
+            {
+                firstName,
+                lastName,
+                phone,
+                id: generateRandomNumber(),
+            },
+        ]);
+    };
+
+    const deleteContact = (id) => {
+        setContacts(contacts.filter((contact) => contact.id !== id));
+    };
+
+    const toggleShowForm = () => {
+        setIsShowForm(!isShowForm);
+    };
+
     return (
-        <ul className="contact-list">
-            {listHeaders && (
-                <li className="list-header">
-                    {listHeaders.map((header) => (
-                        <span key={generateRandomNumber()}>{header}</span>
-                    ))}
-                </li>
-            )}
-            {list?.map((item, i) => (
-                <ContactItem
-                    key={item.id}
-                    {...item}
-                    sequence={i + 1}
-                    deleteContact={deleteContact}
+        <>
+            <h1 className="title">Contacts</h1>
+            <List
+                list={contacts}
+                listHeaders={listHeaders}
+                deleteContact={deleteContact}
+            />
+            <Button
+                variant="contained"
+                disabled={isShowForm}
+                onClick={toggleShowForm}
+            >
+                Add Contact
+            </Button>
+            {isShowForm && (
+                <ContactForm
+                    addContact={addContact}
+                    toggleShowForm={toggleShowForm}
                 />
-            ))}
-        </ul>
+            )}
+        </>
     );
 }
