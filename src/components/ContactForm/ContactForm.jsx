@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Box from "@mui/material/Box";
 import { Button, Stack, TextField } from "@mui/material";
 import validate from "../../utils/validate";
@@ -33,6 +33,11 @@ const initialState = {
 export default function ContactForm({ addContact, toggleShowForm }) {
     const [inputs, setInputs] = useState(initialState);
     const isDisableSubmit = !Object.values(inputs).every((input) => input.value && !input.error);
+    const bottomRef = useRef(null);
+
+    useEffect(() => {
+       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, []);
 
     const onReset = () => {
         setInputs(initialState);
@@ -66,7 +71,7 @@ export default function ContactForm({ addContact, toggleShowForm }) {
     };
 
     return (
-        <form action="" onSubmit={onSubmit} onReset={onReset}>
+        <form action="" onSubmit={onSubmit} onReset={onReset} ref={bottomRef}>
             <Box sx={{ mt: 2, mb: 2, "& .MuiTextField-root": { m: 1, width: "25ch" } }}>
                 {Object.values(inputs).map((input) => (
                     <TextField
@@ -80,20 +85,11 @@ export default function ContactForm({ addContact, toggleShowForm }) {
                 ))}
             </Box>
 
-            <Stack direction="row" spacing={2}>
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="success"
-                    disabled={isDisableSubmit}
-                >
+            <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+                <Button type="submit" variant="contained" color="success" disabled={isDisableSubmit}>
                     Ok
                 </Button>
-                <Button
-                    type="reset"
-                    variant="contained"
-                    color="error"
-                >
+                <Button type="reset" variant="contained" color="error">
                     Cancel
                 </Button>
             </Stack>

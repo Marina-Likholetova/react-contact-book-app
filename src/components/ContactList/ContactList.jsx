@@ -1,32 +1,18 @@
 import React, { useState } from "react";
-import { Button } from "@mui/material";
+import { Alert, Button } from "@mui/material";
+import useContacts from "../../hooks/useContacts";
 import ContactForm from "../ContactForm/ContactForm";
 import List from "../List/List";
-import generateRandomNumber from "../../utils/generateRandomNumber";
+import Loader from "../Loader/Loader";
 import listHeaders from "../../data/listData";
-import contactsDb from "../../data/contactsData";
+import Toast from "../Toast/Toast";
 
+const API_URL = "https://jsonplaceholder.typicode.com/users/";
 
 
 export default function ContactList() {
-    const [contacts, setContacts] = useState(contactsDb);
+    const { contacts, error, loading, addContact, deleteContact, actionText } = useContacts(API_URL);
     const [isShowForm, setIsShowForm] = useState(false);
-
-    const addContact = (firstName, lastName, phone) => {
-        setContacts((prev) => [
-            ...prev,
-            {
-                firstName,
-                lastName,
-                phone,
-                id: generateRandomNumber(),
-            },
-        ]);
-    };
-
-    const deleteContact = (id) => {
-        setContacts(contacts.filter((contact) => contact.id !== id));
-    };
 
     const toggleShowForm = () => {
         setIsShowForm(!isShowForm);
@@ -40,10 +26,13 @@ export default function ContactList() {
                 listHeaders={listHeaders}
                 deleteContact={deleteContact}
             />
+            {loading && <Loader />}
+            {error && <Alert severity="error">Error message: {error}</Alert>}
             <Button
                 variant="contained"
-                disabled={isShowForm}
+                disabled={isShowForm || !!error}
                 onClick={toggleShowForm}
+                sx={{ m: "1em" }}
             >
                 Add Contact
             </Button>
@@ -53,6 +42,7 @@ export default function ContactList() {
                     toggleShowForm={toggleShowForm}
                 />
             )}
+            <Toast error={error} actionText={actionText} />
         </>
     );
 }
