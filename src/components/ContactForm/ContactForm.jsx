@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import Box from "@mui/material/Box";
 import { Button, Stack, TextField } from "@mui/material";
 import validate from "../../utils/validate";
+import { useDispatch } from "react-redux";
+import { addContact } from "../../store/actions/contacts";
 
 
 const initialState = {
@@ -30,10 +32,11 @@ const initialState = {
 
 
 
-export default function ContactForm({ addContact, toggleShowForm }) {
+export default function ContactForm({ toggleShowForm }) {
     const [inputs, setInputs] = useState(initialState);
     const isDisableSubmit = !Object.values(inputs).every((input) => input.value && !input.error);
     const bottomRef = useRef(null);
+    const dispatch = useDispatch();
 
     useEffect(() => {
        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -60,7 +63,7 @@ export default function ContactForm({ addContact, toggleShowForm }) {
         const { firstName, lastName, phone } = inputs;
 
         if (phone.value.length >= 19) {
-            addContact(firstName.value, lastName.value, phone.value);
+            dispatch(addContact({ name: firstName.value, username: lastName.value, phone: phone.value }));
             onReset();
         } else {
             setInputs({
@@ -72,7 +75,7 @@ export default function ContactForm({ addContact, toggleShowForm }) {
 
     return (
         <form action="" onSubmit={onSubmit} onReset={onReset} ref={bottomRef}>
-            <Box sx={{ mt: 2, mb: 2, "& .MuiTextField-root": { m: 1, width: "25ch" } }}>
+            <Box sx={{ mt: 0, mb: 2, "& .MuiTextField-root": { m: 1, width: "25ch" } }}>
                 {Object.values(inputs).map((input) => (
                     <TextField
                         {...input}

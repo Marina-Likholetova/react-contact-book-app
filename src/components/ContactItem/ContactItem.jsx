@@ -1,13 +1,16 @@
 import React from "react";
 import IconButton from "@mui/material/IconButton";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { useDispatch } from "react-redux";
+import { deleteContacts } from "../../store/actions/contacts";
 
 
 export default function ContactItem(props) {
-    const { id, name, username, phone, sequence, deleteContact } = props;
+    const { id, name, username, phone, sequence } = props;
+    const dispatch = useDispatch();
 
     const onDeleteContact = () => {
-        deleteContact(id);
+        dispatch(deleteContacts(id));
     }
 
     return (

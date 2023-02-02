@@ -4,7 +4,7 @@ import ContactItem from "../ContactItem/ContactItem";
 import "./List.css";
 
 
-export default function List({ list, listHeaders, deleteContact }) {
+export default function List({ list, listHeaders }) {
     return (
         <ul className="list">
             {listHeaders && (
@@ -21,7 +21,6 @@ export default function List({ list, listHeaders, deleteContact }) {
                             key={item.id}
                             {...item}
                             sequence={i + 1}
-                            deleteContact={deleteContact}
                         />
                     ))}
                 </ul>

@@ -13,6 +13,8 @@ export default function Toast({ actionText, error }) {
     useEffect(() => {
         if (actionText || error) {
             setOpen(true);
+        } else {
+            setOpen(false)
         }
     }, [actionText, error]);
 

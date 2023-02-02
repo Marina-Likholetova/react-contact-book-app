@@ -1,18 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Alert, Button } from "@mui/material";
-import useContacts from "../../hooks/useContacts";
+import { setContacts } from "../../store/actions/contacts";
 import ContactForm from "../ContactForm/ContactForm";
 import List from "../List/List";
 import Loader from "../Loader/Loader";
 import listHeaders from "../../data/listData";
 import Toast from "../Toast/Toast";
 
-const API_URL = "https://jsonplaceholder.typicode.com/users/";
 
 
 export default function ContactList() {
-    const { contacts, error, loading, addContact, deleteContact, actionText } = useContacts(API_URL);
+    const { value: contacts, error, isLoading, actionText } = useSelector((state) => state.contacts);
     const [isShowForm, setIsShowForm] = useState(false);
+    const dispatch = useDispatch();
+
+    
+    useEffect(() => {
+       dispatch(setContacts());
+    }, [])
+
 
     const toggleShowForm = () => {
         setIsShowForm(!isShowForm);
@@ -21,13 +28,11 @@ export default function ContactList() {
     return (
         <>
             <h1 className="title">Contacts</h1>
-            <List
-                list={contacts}
-                listHeaders={listHeaders}
-                deleteContact={deleteContact}
-            />
-            {loading && <Loader />}
-            {error && <Alert severity="error">Error message: {error}</Alert>}
+            <List list={contacts} listHeaders={listHeaders} />
+            <div className="loader-container">
+                {isLoading && <Loader />}
+                {error && <Alert severity="error">Error message: {error}</Alert>}
+            </div>
             <Button
                 variant="contained"
                 disabled={isShowForm || !!error}
@@ -36,12 +41,7 @@ export default function ContactList() {
             >
                 Add Contact
             </Button>
-            {isShowForm && (
-                <ContactForm
-                    addContact={addContact}
-                    toggleShowForm={toggleShowForm}
-                />
-            )}
+            {isShowForm && <ContactForm toggleShowForm={toggleShowForm} />}
             <Toast error={error} actionText={actionText} />
         </>
     );
