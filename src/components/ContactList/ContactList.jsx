@@ -1,31 +1,48 @@
-import React, { Component } from "react";
-import generateRandomNumber from "../../utils/generateRandomNumber";
-import ContactItem from "../ContactItem/ContactItem";
-import "./ContactList.css";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Alert, Button } from "@mui/material";
+import { setContacts } from "../../store/actions/contacts";
+import ContactForm from "../ContactForm/ContactForm";
+import List from "../List/List";
+import Loader from "../Loader/Loader";
+import listHeaders from "../../data/listData";
+import Toast from "../Toast/Toast";
 
 
 
-export default class ContactList extends Component {
-    render() {
-        const { list, listHeaders, onDeleteContact } = this.props;
-        return (
-            <ul className="contact-list">
-                {listHeaders && (
-                    <li className="list-header">
-                        {listHeaders.map((item) => (
-                            <span key={generateRandomNumber()}>{item}</span>
-                        ))}
-                    </li>
-                )}
-                {list?.map((item, i) => (
-                    <ContactItem
-                        key={generateRandomNumber()}
-                        {...item}
-                        sequence={i + 1}
-                        onDeleteContact={onDeleteContact}
-                    />
-                ))}
-            </ul>
-        );
-    }
+export default function ContactList() {
+    const { value: contacts, error, isLoading, actionText } = useSelector((state) => state.contacts);
+    const [isShowForm, setIsShowForm] = useState(false);
+    const dispatch = useDispatch();
+
+    
+    useEffect(() => {
+       dispatch(setContacts());
+    }, [])
+
+
+    const toggleShowForm = () => {
+        setIsShowForm(!isShowForm);
+    };
+
+    return (
+        <>
+            <h1 className="title">Contacts</h1>
+            <List list={contacts} listHeaders={listHeaders} />
+            <div className="loader-container">
+                {isLoading && <Loader />}
+                {error && <Alert severity="error">Error message: {error}</Alert>}
+            </div>
+            <Button
+                variant="contained"
+                disabled={isShowForm || !!error}
+                onClick={toggleShowForm}
+                sx={{ m: "1em" }}
+            >
+                Add Contact
+            </Button>
+            {isShowForm && <ContactForm toggleShowForm={toggleShowForm} />}
+            <Toast error={error} actionText={actionText} />
+        </>
+    );
 }

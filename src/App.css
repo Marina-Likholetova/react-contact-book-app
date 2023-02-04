@@ -30,3 +30,7 @@
     text-rendering: optimizeLegibility;
     width: 100%;
 }
+
+.loader-container {
+    min-height: 20px;
+}
