@@ -1,4 +1,4 @@
-import { getContacts, addNewContact, deleteContact } from "../../../api/contacts";
+import api from "../../../api/contacts";
 
 export const SET_CONTACTS = "SET_CONTACTS";
 export const ADD_CONTACT = "ADD_CONTACT";
@@ -19,7 +19,7 @@ export const setContacts = () => async (dispatch) => {
     dispatch(setContactLoading(true));
 
     try {
-        const payload = await getContacts();
+        const payload = await api.getContacts();
         dispatch({ type: SET_CONTACTS, payload });
     } catch (error) {
         dispatch(setContactError(error.message));
@@ -33,7 +33,7 @@ export const addContact = (data) => async (dispatch) => {
     dispatch(setContactLoading(true));
 
     try {
-        const payload = await addNewContact(data);
+        const payload = await api.addNewContact(data);
         dispatch({ type: ADD_CONTACT, payload });
     } catch (error) {
         dispatch(setContactError(error.message));
@@ -48,7 +48,7 @@ export const deleteContacts = (id) => async (dispatch) => {
     dispatch(setContactLoading(true));
 
     try {
-        await deleteContact(id);
+        await api.deleteContact(id);
         dispatch({ type: DELETE_CONTACT, payload: id });
     } catch (error) {
         dispatch(setContactError(error.message));
