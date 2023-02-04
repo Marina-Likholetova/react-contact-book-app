@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert, Button } from "@mui/material";
-import { setContacts } from "../../store/actions/contacts";
+import { setContactsSaga } from "../../store/actions/contacts";
 import ContactForm from "../ContactForm/ContactForm";
 import List from "../List/List";
 import Loader from "../Loader/Loader";
@@ -17,7 +17,7 @@ export default function ContactList() {
 
     
     useEffect(() => {
-       dispatch(setContacts());
+       dispatch(setContactsSaga());
     }, [])
 
 

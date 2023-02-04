@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import { Button, Stack, TextField } from "@mui/material";
 import validate from "../../utils/validate";
 import { useDispatch } from "react-redux";
-import { addContact } from "../../store/actions/contacts";
+import { addContactSaga } from "../../store/actions/contacts";
 
 
 const initialState = {
@@ -63,7 +63,7 @@ export default function ContactForm({ toggleShowForm }) {
         const { firstName, lastName, phone } = inputs;
 
         if (phone.value.length >= 19) {
-            dispatch(addContact({ name: firstName.value, username: lastName.value, phone: phone.value }));
+            dispatch(addContactSaga({ name: firstName.value, username: lastName.value, phone: phone.value }));
             onReset();
         } else {
             setInputs({

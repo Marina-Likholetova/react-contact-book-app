@@ -3,5 +3,5 @@ import contactReducer from "./contacts/index"
 
 
 export default combineReducers({
-    contacts: contactReducer
+    contacts: contactReducer,
 })
