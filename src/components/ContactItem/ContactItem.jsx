@@ -1,28 +1,33 @@
-import React, { Component } from "react";
+import React from "react";
 import IconButton from "@mui/material/IconButton";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import capitalizeFirstLetter  from "../../utils/capitalizeFirstLetter";
+import { useDispatch } from "react-redux";
+import { deleteContactSaga } from "../../store/actions/contacts";
 
 
-export default class ContactItem extends Component {
-    render() {
-        const { id, firstName, lastName, phone, sequence, onDeleteContact } = this.props;
-        return (
-            <li>
-                <span>{sequence}</span>
-                <span>{capitalizeFirstLetter(firstName)}</span>
-                <span>{capitalizeFirstLetter(lastName)}</span>
-                <span>{phone}</span>
-                <span>
-                    <IconButton
-                        aria-label="delete"
-                        color="error"
-                        onClick={() => onDeleteContact(id)}
-                    >
-                        <DeleteForeverIcon />
-                    </IconButton>
-                </span>
-            </li>
-        );
+export default function ContactItem(props) {
+    const { id, name, username, phone, sequence } = props;
+    const dispatch = useDispatch();
+
+    const onDeleteContact = () => {
+        dispatch(deleteContactSaga(id));
     }
+
+    return (
+        <li className="list-item">
+            <span>{sequence}</span>
+            <span>{name}</span>
+            <span>{username}</span>
+            <span>{phone}</span>
+            <span>
+                <IconButton
+                    aria-label="delete"
+                    color="error"
+                    onClick={onDeleteContact}
+                >
+                    <DeleteForeverIcon />
+                </IconButton>
+            </span>
+        </li>
+    );
 }
