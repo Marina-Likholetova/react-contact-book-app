@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert, Button } from "@mui/material";
-import { setContactsSaga } from "../../store/actions/contacts";
+import { fetchUsers } from "../../store/slices/users/usersSlice";
 import ContactForm from "../ContactForm/ContactForm";
 import List from "../List/List";
 import Loader from "../Loader/Loader";
@@ -10,14 +10,15 @@ import Toast from "../Toast/Toast";
 
 
 
+
 export default function ContactList() {
-    const { value: contacts, error, isLoading, actionText } = useSelector((state) => state.contacts);
+    const { value: contacts, error, loading, actionText } = useSelector((state) => state.users);
     const [isShowForm, setIsShowForm] = useState(false);
     const dispatch = useDispatch();
 
     
     useEffect(() => {
-       dispatch(setContactsSaga());
+       dispatch(fetchUsers());
     }, [])
 
 
@@ -30,7 +31,7 @@ export default function ContactList() {
             <h1 className="title">Contacts</h1>
             <List list={contacts} listHeaders={listHeaders} />
             <div className="loader-container">
-                {isLoading && <Loader />}
+                {loading && <Loader />}
                 {error && <Alert severity="error">Error message: {error}</Alert>}
             </div>
             <Button

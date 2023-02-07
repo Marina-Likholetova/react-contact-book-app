@@ -2,7 +2,8 @@ import React from "react";
 import IconButton from "@mui/material/IconButton";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useDispatch } from "react-redux";
-import { deleteContactSaga } from "../../store/actions/contacts";
+import { deleteUser } from "../../store/slices/users/usersSlice";
+
 
 
 export default function ContactItem(props) {
@@ -10,7 +11,7 @@ export default function ContactItem(props) {
     const dispatch = useDispatch();
 
     const onDeleteContact = () => {
-        dispatch(deleteContactSaga(id));
+        dispatch(deleteUser({id}));
     }
 
     return (
