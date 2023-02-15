@@ -1,23 +1,27 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useMemo } from "react";
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router";
+import { Form } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { Button, Stack, TextField } from "@mui/material";
-import validate from "../../utils/validate";
-import { useDispatch } from "react-redux";
-import { createUser } from "../../store/slices/users/usersSlice";
-
+import inputMask from "../../utils/form/inputMask";
+import { updateUser, fetchSingleUser } from "../../store/slices/users/usersSlice";
+import useNavigation from "../../hooks/useNavigation";
+import mergeFormInputs from "../../utils/form/mergeFormInputs";
+import "./ContactForm.css"
 
 
 const initialState = {
-    firstName: {
-        label: "First Name",
-        name: "firstName",
+    name: {
+        label: "Name",
+        name: "name",
         type: "text",
         value: "",
         error: false,
     },
-    lastName: {
-        label: "Last Name",
-        name: "lastName",
+    username: {
+        label: "Username",
+        name: "username",
         type: "text",
         value: "",
         error: false,
@@ -29,53 +33,67 @@ const initialState = {
         value: "",
         error: false,
     },
+    email: {
+        label: "Email",
+        name: "email",
+        type: "email",
+        value: "",
+        error: false,
+    },
+    website: {
+        label: "Website",
+        name: "website",
+        type: "text",
+        value: "",
+        error: false,
+    },
 };
 
 
 
-export default function ContactForm({ toggleShowForm }) {
+export default function ContactForm() {
     const [inputs, setInputs] = useState(initialState);
-    const isDisableSubmit = !Object.values(inputs).every((input) => input.value && !input.error);
-    const bottomRef = useRef(null);
+    const { id } = useParams();
     const dispatch = useDispatch();
-
+    const { moveBackward } = useNavigation();
+    const isDisableSubmit = useMemo(
+        () => !Object.values(inputs).every((input) => input.value && !input.error),
+        [inputs]
+    );
+   
     useEffect(() => {
-       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+        dispatch(fetchSingleUser(id)).then(({ payload }) =>
+            setInputs((prev) => mergeFormInputs(prev, payload))
+        );
     }, []);
 
+
     const onReset = () => {
-        setInputs(initialState);
-        toggleShowForm();
+        moveBackward();
     };
+
 
     const onChange = ({ target: { name, value } }) => {
         setInputs({
             ...inputs,
             [name]: {
                 ...inputs[name],
-                value: validate(value, name),
-                error: false,
+                value: inputMask(value, name),
+                error: value ? false : true,
             },
         });
     };
 
+
     const onSubmit = (e) => {
         e.preventDefault();
-        const { firstName, lastName, phone } = inputs;
-
-        if (phone.value.length >= 19) {
-            dispatch(createUser({ name: firstName.value, username: lastName.value, phone: phone.value }));
-            onReset();
-        } else {
-            setInputs({
-                ...inputs,
-                phone: { ...phone, error: true },
-            });
-        }
+        const formData = new FormData(e.target);
+        const updates = Object.fromEntries(formData);
+        dispatch(updateUser({ id: Number(id), ...updates })).then(() => onReset());
     };
 
     return (
-        <form action="" onSubmit={onSubmit} onReset={onReset} ref={bottomRef}>
+        <Form className="form" onSubmit={onSubmit} onReset={onReset}>
             <Box sx={{ mt: 0, mb: 2, "& .MuiTextField-root": { m: 1, width: "25ch" } }}>
                 {Object.values(inputs).map((input) => (
                     <TextField
@@ -83,12 +101,10 @@ export default function ContactForm({ toggleShowForm }) {
                         key={input.name}
                         onChange={onChange}
                         variant="outlined"
-                        helperText={input.error ? "Phone number should be 12 digit number" : ""}
-                        required
+                        helperText={input.error ? "Required field must be filled in." : ""}
                     />
                 ))}
             </Box>
-
             <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
                 <Button type="submit" variant="contained" color="success" disabled={isDisableSubmit}>
                     Ok
@@ -97,6 +113,6 @@ export default function ContactForm({ toggleShowForm }) {
                     Cancel
                 </Button>
             </Stack>
-        </form>
+        </Form>
     );
 }

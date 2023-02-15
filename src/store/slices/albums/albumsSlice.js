@@ -1,40 +1,41 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import albumsApi from "../../../api/requests/usersRequests";
-import { setError, setLoading } from "../../helpers/slices";
+import albumsApi from "../../../api/requests/albumsRequests";
+import { setError, setLoading, setState } from "../../helpers/slices";
 
 const initialState = {
     value: [],
     error: null,
     loading: false,
+    actionText: null,
 };
 
 export const fetchAlbums = createAsyncThunk(
-    "album/fetchAlbums",
-    async (id, { rejectWithValue}) => {
+    "albums/fetchAlbums",
+    async (params, {rejectWithValue}) => {
         try {
-            const data = albumsApi.getAlbums();
+            const data = await albumsApi.getAlbums(params);
             return data;
         } catch (error) {
-            rejectWithValue(error.message)
+            return rejectWithValue(error.message)
         }
     }
 )
 
 export const deleteAlbums = createAsyncThunk(
-    "album/deleteAlbums",
+    "albums/deleteAlbums",
     async (id, { rejectWithValue, dispatch }) => {
         try {
-            await albumsApi.deleteAlbums(id);
+            await albumsApi.deleteAlbum(id);
             dispatch(deleteAlbum(id));
         } catch (error) {
-            rejectWithValue(error.message)
+            return rejectWithValue(error.message)
         }
     }
 )
 
 
 export const albumsSlice = createSlice({
-    name: "album",
+    name: "albums",
     initialState,
     reducers: {
         deleteAlbum: (state, { payload }) => {
@@ -45,10 +46,7 @@ export const albumsSlice = createSlice({
     extraReducers: {
         [fetchAlbums.pending]: setLoading,
         [deleteAlbums.pending]: setLoading,
-        [fetchAlbums.fulfilled]: (state, { payload }) => {
-            state.value = payload;
-            state.loading = false;
-        },
+        [fetchAlbums.fulfilled]: setState,
         [deleteAlbums.fulfilled]: (state) => { state.loading = false },
         [fetchAlbums.rejected]: setError,
         [deleteAlbums.rejected]: setError,

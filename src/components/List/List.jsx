@@ -1,30 +1,19 @@
 import React from "react";
-import generateRandomNumber from "../../utils/generateRandomNumber";
-import ContactItem from "../ContactItem/ContactItem";
+import { NavLink } from "react-router-dom";
 import "./List.css";
 
 
-export default function List({ list, listHeaders }) {
+export default function List({ to, list }) {
     return (
         <ul className="list">
-            {listHeaders && (
-                <li className="list-header list-item">
-                    {listHeaders.map((header) => (
-                        <span key={generateRandomNumber()}>{header}</span>
-                    ))}
-                </li>
-            )}
-            <li className={list?.length > 5 ? "list-info" : ""}>
-                <ul>
-                    {list?.map((item, i) => (
-                        <ContactItem
-                            key={item.id}
-                            {...item}
-                            sequence={i + 1}
-                        />
-                    ))}
-                </ul>
-            </li>
+            {list &&
+                list.map((item) => (
+                    <li className="list-item" key={item.id}>
+                        <NavLink to={`${to}/${item.id}`} className="list__link">
+                            {item.name || item.title}
+                        </NavLink>
+                    </li>
+                ))}
         </ul>
     );
 }

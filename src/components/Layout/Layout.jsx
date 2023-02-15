@@ -1,0 +1,21 @@
+import React from "react";
+import { Outlet } from "react-router";
+import { Alert } from "@mui/material";
+import Loader from "../../components/Loader/Loader";
+import Toast from "../../components/Toast/Toast";
+
+
+
+export default function Layout({ children = () => null, error = null, loading = null, actionText = null }) {
+    return (
+        <>
+            <aside className="sidebar">{children()}</aside>
+            <article className="md-content">
+                {!error && !loading && <Outlet />}
+                {loading && <Loader />}
+                {error && <Alert severity="error">Error message: {error}</Alert>}
+            </article>
+            <Toast actionText={actionText} error={error} />
+        </>
+    );
+}

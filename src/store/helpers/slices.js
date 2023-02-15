@@ -4,6 +4,12 @@ export const setError = (state, action) => {
 }
 
 export const setLoading = (state) => {
-    state.loading = true;
     state.error = null;
+    state.actionText = null;
+    state.loading = true;
+}
+
+export const setState = (state, action) => {
+    state.value = action.payload;
+    state.loading = false;
 }

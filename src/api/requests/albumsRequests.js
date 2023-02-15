@@ -1,8 +1,8 @@
 import instance from "../axiosInstance";
 import { ALBUMS_PATH } from "../../constants/api";
 
-const getAlbums = async () => {
-    const response = await instance.get(ALBUMS_PATH);
+const getAlbums = async (params = {}) => {
+    const response = await instance.get(ALBUMS_PATH, {params});
     return response.data;
 }
 
