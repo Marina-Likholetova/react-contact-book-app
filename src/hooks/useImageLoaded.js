@@ -8,7 +8,9 @@ export default function useImageLoaded() {
     const ref = useRef();
 
     const onLoad = () => {
-       setLoading(prev => prev ? !prev : prev);
+        setTimeout(() => {
+            setLoading(prev => prev ? !prev : prev);
+        }, 1000)
     };
 
     const onError = (e) => {
@@ -21,5 +23,5 @@ export default function useImageLoaded() {
         }
     });
 
-    return [ref, loading, onLoad, onError];
+    return { ref, loading, onLoad, onError};
 }

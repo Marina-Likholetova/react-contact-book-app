@@ -8,7 +8,7 @@ export default function Navbar({ navLinks }) {
           <ul className="navbar__items">
               {navLinks.map((link) => (
                   <li key={Math.random()} className="navbar-item">
-                      <NavLink to={link} className="navbar__link">
+                      <NavLink to={`/${link}`} className="navbar__link">
                           {capitalizeFirstLetter(link)}
                       </NavLink>
                   </li>

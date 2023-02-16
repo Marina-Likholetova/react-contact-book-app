@@ -85,6 +85,9 @@ export const usersSlice = createSlice({
 
         deleteUserById: (state, { payload }) => {
             state.value = state.value.filter(user => user.id !== Number(payload.id))
+        },
+        clearUpError: (state) => {
+            state.error = false
         }
 
     },
@@ -93,18 +96,21 @@ export const usersSlice = createSlice({
         [createUser.pending]: setLoading,
         [deleteUser.pending]: setLoading,
         [updateUser.pending]: setLoading,
+        [fetchSingleUser.pending]: setLoading,
         [fetchUsers.fulfilled]: setState,
         [createUser.fulfilled]: (state) => { state.loading = false; state.actionText = "save" },
         [deleteUser.fulfilled]: (state) => { state.loading = false; state.actionText = "delete" },
         [updateUser.fulfilled]: (state) => { state.loading = false; state.actionText = "update" },
+        [fetchSingleUser.fulfilled]: (state) => { state.loading = false },
         [fetchUsers.rejected]: setError,
         [createUser.rejected]: setError,
         [deleteUser.rejected]: setError,
-        [updateUser.rejected]: setError
+        [updateUser.rejected]: setError,
+        [fetchSingleUser.rejected]: setError
     }
 
 })
 
-export const { addUser, deleteUserById, changeUser } = usersSlice.actions;
+export const { addUser, deleteUserById, changeUser, clearUpError } = usersSlice.actions;
 
 export default usersSlice.reducer;

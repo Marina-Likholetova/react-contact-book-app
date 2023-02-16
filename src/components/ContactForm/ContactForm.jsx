@@ -1,15 +1,13 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router";
-import { Form } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { Button, Stack, TextField } from "@mui/material";
 import inputMask from "../../utils/form/inputMask";
-import { updateUser, fetchSingleUser } from "../../store/slices/users/usersSlice";
+import { updateUser, fetchSingleUser, createUser, clearUpError } from "../../store/slices/users/usersSlice";
 import useNavigation from "../../hooks/useNavigation";
 import mergeFormInputs from "../../utils/form/mergeFormInputs";
-import "./ContactForm.css"
-
+import "./ContactForm.css";
 
 const initialState = {
     name: {
@@ -49,29 +47,28 @@ const initialState = {
     },
 };
 
-
-
 export default function ContactForm() {
     const [inputs, setInputs] = useState(initialState);
     const { id } = useParams();
     const dispatch = useDispatch();
-    const { moveBackward } = useNavigation();
+    const { moveBackward, moveToUsers } = useNavigation();
     const isDisableSubmit = useMemo(
         () => !Object.values(inputs).every((input) => input.value && !input.error),
         [inputs]
     );
-   
-    useEffect(() => {
-        dispatch(fetchSingleUser(id)).then(({ payload }) =>
-            setInputs((prev) => mergeFormInputs(prev, payload))
-        );
-    }, []);
 
+    useEffect(() => {
+        dispatch(clearUpError());
+        if (id) {
+            dispatch(fetchSingleUser(id)).then(({ payload }) =>
+                setInputs((prev) => mergeFormInputs(prev, payload))
+            );
+        }
+    }, []);
 
     const onReset = () => {
         moveBackward();
     };
-
 
     const onChange = ({ target: { name, value } }) => {
         setInputs({
@@ -84,16 +81,19 @@ export default function ContactForm() {
         });
     };
 
-
     const onSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const updates = Object.fromEntries(formData);
-        dispatch(updateUser({ id: Number(id), ...updates })).then(() => onReset());
+        if (id) {
+            dispatch(updateUser({ id: Number(id), ...updates })).then(() => onReset());
+        } else {
+            dispatch(createUser(updates)).then(() => moveToUsers());
+        }
     };
 
     return (
-        <Form className="form" onSubmit={onSubmit} onReset={onReset}>
+        <form className="form" onSubmit={onSubmit} onReset={onReset}>
             <Box sx={{ mt: 0, mb: 2, "& .MuiTextField-root": { m: 1, width: "25ch" } }}>
                 {Object.values(inputs).map((input) => (
                     <TextField
@@ -113,6 +113,6 @@ export default function ContactForm() {
                     Cancel
                 </Button>
             </Stack>
-        </Form>
+        </form>
     );
 }

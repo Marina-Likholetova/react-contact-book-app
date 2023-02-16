@@ -1,25 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Form } from "react-router-dom";
-import { useParams } from "react-router";
+import { useParams, useRouteMatch } from "react-router";
 import { Button } from "@mui/material";
 import Fab from "@mui/material/Fab";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import { deleteUser, fetchSingleUser } from "../../store/slices/users/usersSlice";
 import useNavigation from "../../hooks/useNavigation";
+import { EDIT_PATH } from "../../constants/api";
 import "./UserItem.css";
+
 
 
 
 export default function UserItem() {
     const [user, setUser] = useState(null);
     const { id } = useParams();
-    const { moveToUsers, moveToAlbumsByUserId } = useNavigation();
+    const { moveToUsers, moveToAlbumsByUserId, moveTo } = useNavigation();
     const dispatch = useDispatch();
+    const { url } = useRouteMatch();
 
     const onDelete = () => {
         dispatch(deleteUser(id)).then(() => moveToUsers());
     };
+
+    const onEdit = () => {
+        moveTo(url + EDIT_PATH);
+    }
 
     const onMoveToUserAlbums = () => {
         moveToAlbumsByUserId(id);
@@ -57,16 +63,12 @@ export default function UserItem() {
                         </span>
                     </div>
                     <div className="user-forms">
-                        <Form action="edit">
-                            <Button type="submit" variant="outlined">
+                            <Button variant="outlined" onClick={onEdit}>
                                 Edit
                             </Button>
-                        </Form>
-                        <Form>
                             <Button variant="outlined" color="error" onClick={onDelete}>
                                 Delete
                             </Button>
-                        </Form>
                     </div>
                 </>
             )}

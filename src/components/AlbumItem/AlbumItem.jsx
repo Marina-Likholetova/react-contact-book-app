@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { fetchPhotos } from '../../store/slices/photos/photosSlice';
 import ImageItem from '../ImageItem/ImageItem';
+import Loader from '../Loader/Loader';
 import "./AlbumItem.css";
 
 
 
 export default function AlbumItem() {
-    const photos = useSelector(state => state.photos.value);
+    const { value: photos, loading }= useSelector(state => state.photos);
     const dispatch = useDispatch();
     const {id} = useParams();
 
@@ -17,11 +18,12 @@ export default function AlbumItem() {
     }, [id])
 
   return (
-      <div className="album">
-          {photos &&
-              photos.map((photo) => (
-                    <ImageItem key={photo.id} {...photo} />
-              ))}
-      </div>
+      <>
+          {(photos && !loading)
+            ? <div className='album'>
+                {photos.map((photo) => <ImageItem key={photo.id} {...photo} />)}
+            </div>
+            : <Loader />}
+      </>
   );
 }

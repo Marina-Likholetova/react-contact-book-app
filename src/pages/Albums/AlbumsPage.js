@@ -1,20 +1,20 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams, useMatches } from "react-router";
+import { useParams, useRouteMatch} from "react-router";
 import { Button } from "@mui/material";
 import Layout from "../../components/Layout/Layout";
 import List from "../../components/List/List";
 import { fetchAlbums } from "../../store/slices/albums/albumsSlice";
 import useNavigation from "../../hooks/useNavigation";
-import { USERS_PATH } from "../../constants/api";
 
 
-export default function AlbumsPage() {
+
+export default function AlbumsPage({routes}) {
     const { value: albums, error, loading, actionText } = useSelector((state) => state.albums);
     const dispatch = useDispatch();
     const { userId } = useParams();
-    const [, albumsPath] = useMatches();
-    const { moveTo } = useNavigation();
+    const { moveToUser } = useNavigation();
+    const { url } = useRouteMatch();
 
     useEffect(() => {
         dispatch(fetchAlbums({ userId }));
@@ -25,16 +25,16 @@ export default function AlbumsPage() {
             error={error}
             loading={loading}
             actionText={actionText}
-            children={() => (
+            sidebar={() => (
                 <>
-                    <List to={albumsPath.pathname} list={albums} />
+                    <List to={url} list={albums} />
                     {userId && (
                         <Button
                             variant="outlined"
                             fullWidth
                             sx={{ textTransform: "none" }}
                             onClick={() => {
-                                moveTo(`${USERS_PATH}/${userId}`);
+                                moveToUser(userId);
                             }}
                         >
                             Back to the user
@@ -42,6 +42,7 @@ export default function AlbumsPage() {
                     )}
                 </>
             )}
+            routes={routes}
         />
     );
 }

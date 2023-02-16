@@ -108,6 +108,10 @@ ul {
     color: #00000084;
 }
 
+.display-none {
+    display: none !important;
+}
+
 article {
     position: relative;
 }
