@@ -1,0 +1,26 @@
+.list {
+    margin-bottom: 1rem;
+}
+.list-item {
+    transition: var(--main-transition);
+    border-radius: var(--main-border-radius);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    user-select: none;
+    padding: var(--sidebar-list-item-padding-vertical)  var(--sidebar-list-item-padding-horizontal);
+}
+
+.list__link {
+    color: var(--sidebar-list-link-color);
+    padding: var(--sidebar-list-link-padding-vertical) var(--sidebar-list-link-padding-horizontal);
+    display: block;
+}
+
+.list-item:hover {
+    background-color: var(--light-bg);
+}
+
+.list__link.active {
+    font-weight: 500;
+    color: var(--primary);
+}

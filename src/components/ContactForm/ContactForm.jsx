@@ -1,20 +1,25 @@
-import React, { Component } from "react";
+import React, { useEffect, useState, useMemo } from "react";
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router";
 import Box from "@mui/material/Box";
 import { Button, Stack, TextField } from "@mui/material";
-import validate from "../../utils/validate";
-
+import inputMask from "../../utils/form/inputMask";
+import { updateUser, fetchSingleUser, createUser, clearUpError } from "../../store/slices/users/usersSlice";
+import useNavigation from "../../hooks/useNavigation";
+import mergeFormInputs from "../../utils/form/mergeFormInputs";
+import "./ContactForm.css";
 
 const initialState = {
-    firstName: {
-        label: "First Name",
-        name: "firstName",
+    name: {
+        label: "Name",
+        name: "name",
         type: "text",
         value: "",
         error: false,
     },
-    lastName: {
-        label: "Last Name",
-        name: "lastName",
+    username: {
+        label: "Username",
+        name: "username",
         type: "text",
         value: "",
         error: false,
@@ -26,81 +31,88 @@ const initialState = {
         value: "",
         error: false,
     },
+    email: {
+        label: "Email",
+        name: "email",
+        type: "email",
+        value: "",
+        error: false,
+    },
+    website: {
+        label: "Website",
+        name: "website",
+        type: "text",
+        value: "",
+        error: false,
+    },
 };
 
+export default function ContactForm() {
+    const [inputs, setInputs] = useState(initialState);
+    const { id } = useParams();
+    const dispatch = useDispatch();
+    const { moveBackward, moveToUsers } = useNavigation();
+    const isDisableSubmit = useMemo(
+        () => !Object.values(inputs).every((input) => input.value && !input.error),
+        [inputs]
+    );
 
+    useEffect(() => {
+        dispatch(clearUpError());
+        if (id) {
+            dispatch(fetchSingleUser(id)).then(({ payload }) =>
+                setInputs((prev) => mergeFormInputs(prev, payload))
+            );
+        }
+    }, []);
 
-export default class ContactForm extends Component {
-    constructor(props) {
-        super(props);
-        this.state = initialState;
-    }
-
-    onReset = () => {
-        this.setState(initialState);
-        this.props.toggleShowForm();
+    const onReset = () => {
+        moveBackward();
     };
 
-    onChange = ({ target: { name, value } }) => {
-        this.setState({
+    const onChange = ({ target: { name, value } }) => {
+        setInputs({
+            ...inputs,
             [name]: {
-                ...this.state[name],
-                value: validate(value, name),
-                error: false,
+                ...inputs[name],
+                value: inputMask(value, name),
+                error: value ? false : true,
             },
         });
     };
 
-    onSubmit = (e) => {
+    const onSubmit = (e) => {
         e.preventDefault();
-        const { firstName, lastName, phone } = this.state;
-
-        if (phone.value.length >= 19) {
-            this.props.addContact(firstName.value, lastName.value, phone.value);
-            this.onReset();
+        const formData = new FormData(e.target);
+        const updates = Object.fromEntries(formData);
+        if (id) {
+            dispatch(updateUser({ id: Number(id), ...updates })).then(() => onReset());
         } else {
-            this.setState({
-                phone: { ...phone, error: true },
-            });
+            dispatch(createUser(updates)).then(() => moveToUsers());
         }
     };
 
-    render() {
-        const isDisableOk = !Object.values(this.state).every((item) => item.value && !item.error);
-        return (
-            <>
-                <form action="" onSubmit={this.onSubmit} onReset={this.onReset}>
-                    <Box sx={{ mt: 2, mb: 2, "& .MuiTextField-root": { m: 1, width: "25ch" } }}>
-                        {Object.values(this.state).map((input) => (
-                            <TextField
-                                {...input}
-                                onChange={this.onChange}
-                                variant="outlined"
-                                helperText={input.error ? "Phone number should be 12 digit number" : ""}
-                                required
-                            />
-                        ))}
-                    </Box>
-
-                    <Stack direction="row" spacing={2}>
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="success"
-                            disabled={isDisableOk}
-                        >
-                            Ok
-                        </Button>
-                        <Button
-                            type="reset"
-                            variant="contained"
-                            color="error"
-                        >
-                            Cancel
-                        </Button>
-                    </Stack>
-                </form>
-            </>
-        );
-    }
+    return (
+        <form className="form" onSubmit={onSubmit} onReset={onReset}>
+            <Box sx={{ mt: 0, mb: 2, "& .MuiTextField-root": { m: 1, width: "25ch" } }}>
+                {Object.values(inputs).map((input) => (
+                    <TextField
+                        {...input}
+                        key={input.name}
+                        onChange={onChange}
+                        variant="outlined"
+                        helperText={input.error ? "Required field must be filled in." : ""}
+                    />
+                ))}
+            </Box>
+            <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+                <Button type="submit" variant="contained" color="success" disabled={isDisableSubmit}>
+                    Ok
+                </Button>
+                <Button type="reset" variant="contained" color="error">
+                    Cancel
+                </Button>
+            </Stack>
+        </form>
+    );
 }

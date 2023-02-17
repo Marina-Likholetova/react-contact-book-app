@@ -1,0 +1,8 @@
+/* .form {
+    width: 100%;
+} */
+
+.form div:first-child {
+    display: flex;
+    flex-flow: column nowrap;
+}
