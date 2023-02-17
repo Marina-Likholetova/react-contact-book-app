@@ -6,13 +6,12 @@ import Layout from "../../components/Layout/Layout";
 import List from "../../components/List/List";
 import { USERS_PATH } from "../../constants/api";
 import { fetchUsers } from "../../store/slices/users/usersSlice";
-import { useNavigate } from "react-router";
+
 
 
 export default function UsersPage() {
     const { value: contacts, error, loading, actionText } = useSelector((state) => state.users);
     const dispatch = useDispatch();
-    const { moveTo } = useNavigate();
 
     useEffect(() => {
         dispatch(fetchUsers());
@@ -23,7 +22,7 @@ export default function UsersPage() {
             error={error}
             loading={loading}
             actionText={actionText}
-            children={() => (
+            sidebar={() => (
                 <>
                     <List to={USERS_PATH} list={contacts} />
                     <Form action="new">
