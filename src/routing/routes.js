@@ -13,16 +13,6 @@ const routes = [
         exact: true,
         element: Index,
     },
-    // {
-    //     path: "/users/new",
-    //     element: UsersPage,
-    //     routes: [
-    //         {
-    //             exact: true,
-    //             element: ContactForm,
-    //         },
-    //     ],
-    // },
     {
         path: "/users",
         element: UsersPage,
