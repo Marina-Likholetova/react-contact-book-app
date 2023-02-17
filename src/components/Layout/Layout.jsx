@@ -11,7 +11,9 @@ export default function Layout({ children = () => null, error = null, loading = 
         <>
             <aside className="sidebar">{children()}</aside>
             <article className="md-content">
-                {!error && !loading && <Outlet />}
+                <section className={(!loading && !error) ? "" : "display-none"}>
+                    <Outlet />
+                </section>
                 {loading && <Loader />}
                 {error && <Alert severity="error">Error message: {error}</Alert>}
             </article>

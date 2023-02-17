@@ -27,6 +27,10 @@ const router = createBrowserRouter([
                         index: true,
                     },
                     {
+                        path: "new",
+                        element: <ContactForm/>
+                    },
+                    {
                         path: ":id",
                         element: <UserItem />,
                     },
