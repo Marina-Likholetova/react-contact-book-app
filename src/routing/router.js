@@ -7,6 +7,14 @@ import UserItem from "../components/UserItem/UserItem";
 import ContactForm from "../components/ContactForm/ContactForm";
 import AlbumItem from "../components/AlbumItem/AlbumItem";
 import Index from "../components/Layout/Layout";
+import withUser from "../hoc/withUser";
+import withAddUser from "../hoc/withAddUser";
+
+
+const ItemWithUser = withUser(UserItem);
+const FormWithUser = withUser(ContactForm)
+const FormWithAddUser = withAddUser(ContactForm)
+
 
 const router = createBrowserRouter([
     {
@@ -28,15 +36,15 @@ const router = createBrowserRouter([
                     },
                     {
                         path: "new",
-                        element: <ContactForm/>
+                        element: <FormWithAddUser/>
                     },
                     {
                         path: ":id",
-                        element: <UserItem />,
+                        element: <ItemWithUser/>
                     },
                     {
                         path: ":id/edit",
-                        element: <ContactForm />,
+                        element: <FormWithUser/>
                     },
                 ],
             },

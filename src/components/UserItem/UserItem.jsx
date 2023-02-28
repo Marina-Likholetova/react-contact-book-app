@@ -1,33 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
 import { Form } from "react-router-dom";
-import { useParams } from "react-router";
 import { Button } from "@mui/material";
 import Fab from "@mui/material/Fab";
 import CollectionsIcon from "@mui/icons-material/Collections";
-import { deleteUser, fetchSingleUser } from "../../store/slices/users/usersSlice";
 import useNavigation from "../../hooks/useNavigation";
 import "./UserItem.css";
 
 
 
-export default function UserItem() {
-    const [user, setUser] = useState(null);
-    const { id } = useParams();
+export default function UserItem({user, onDeleteUser }) {
     const { moveToUsers, moveToAlbumsByUserId } = useNavigation();
-    const dispatch = useDispatch();
-
+  
+    // console.log("ITEM PROPS", props)
     const onDelete = () => {
-        dispatch(deleteUser(id)).then(() => moveToUsers());
+        onDeleteUser().then(() => moveToUsers());
     };
 
     const onMoveToUserAlbums = () => {
-        moveToAlbumsByUserId(id);
+        moveToAlbumsByUserId(user.id);
     };
-
-    useEffect(() => {
-        dispatch(fetchSingleUser(id)).then(({ payload }) => setUser(payload));
-    }, [id]);
 
     return (
         <div className="user-profile">
