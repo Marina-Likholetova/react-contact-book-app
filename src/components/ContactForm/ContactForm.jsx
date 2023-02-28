@@ -1,126 +1,90 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { useDispatch } from "react-redux";
-import { useParams } from "react-router";
-import { Form } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Formik, Form, Field } from "formik";
+import * as yup from "yup";
 import Box from "@mui/material/Box";
-import { Button, Stack, TextField } from "@mui/material";
-import inputMask from "../../utils/form/inputMask";
-import { updateUser, fetchSingleUser, createUser, cleanUpError } from "../../store/slices/users/usersSlice";
+import { Button, capitalize, Stack, TextField } from "@mui/material";
 import useNavigation from "../../hooks/useNavigation";
 import mergeFormInputs from "../../utils/form/mergeFormInputs";
+import initialFields from "../../constants/initialFields.js";
 import "./ContactForm.css"
 
 
-const initialState = {
-    name: {
-        label: "Name",
-        name: "name",
-        type: "text",
-        value: "",
-        error: false,
-    },
-    username: {
-        label: "Username",
-        name: "username",
-        type: "text",
-        value: "",
-        error: false,
-    },
-    phone: {
-        label: "Phone",
-        name: "phone",
-        type: "tel",
-        value: "",
-        error: false,
-    },
-    email: {
-        label: "Email",
-        name: "email",
-        type: "email",
-        value: "",
-        error: false,
-    },
-    website: {
-        label: "Website",
-        name: "website",
-        type: "text",
-        value: "",
-        error: false,
-    },
-};
 
-
-
-export default function ContactForm() {
-    const [inputs, setInputs] = useState(initialState);
-    const { id } = useParams();
-    const dispatch = useDispatch();
+export default function ContactForm({ user, onAddUser, onEditUser }) {
+    const [inputs, setInputs] = useState(initialFields);
     const { moveBackward, moveToUsers } = useNavigation();
-    const isDisableSubmit = useMemo(
-        () => !Object.values(inputs).every((input) => input.value && !input.error),
-        [inputs]
-    );
-   
+    const validationSchema = yup.object().shape({
+        name: yup.string().required("Required").max(20).min(2),
+        username: yup.string().required("Required").max(20).min(2),
+        email: yup.string().email("Invalid email").required("Required"),
+        phone: yup.string().required("Required").trim(),
+        website: yup.string().nullable(),
+    });
+
     useEffect(() => {
-        setInputs(initialState);
-        dispatch(cleanUpError());
-        if (id) {
-            dispatch(fetchSingleUser(id)).then(({ payload }) =>
-                setInputs((prev) => mergeFormInputs(prev, payload))
-            );
+        if (user) {
+            setInputs((prev) => mergeFormInputs(prev, user));
         }
-    }, [id]);
+    }, [user])
 
 
     const onReset = () => {
-        moveBackward();
-    };
-
-
-    const onChange = ({ target: { name, value } }) => {
-        setInputs({
-            ...inputs,
-            [name]: {
-                ...inputs[name],
-                value: inputMask(value, name),
-                error: value ? false : true,
-            },
-        });
-    };
-
-
-    const onSubmit = (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const updates = Object.fromEntries(formData);
-        if (id) {
-            dispatch(updateUser({ id: Number(id), ...updates })).then(() => onReset());
+        if (user) {
+            moveBackward();
         } else {
-            dispatch(createUser(updates)).then(() => moveToUsers());
+            moveToUsers();
         }
     };
 
+
+    const onSubmit = async (values) => {
+          if (user) {
+            await onEditUser({ ...user, ...values })
+          } else {
+            await onAddUser(values)
+        }
+        moveToUsers();
+    };
+
     return (
-        <Form className="form" onSubmit={onSubmit} onReset={onReset}>
-            <Box sx={{ mt: 0, mb: 2, "& .MuiTextField-root": { m: 1, width: "25ch" } }}>
-                {Object.values(inputs).map((input) => (
-                    <TextField
-                        {...input}
-                        key={input.name}
-                        onChange={onChange}
-                        variant="outlined"
-                        helperText={input.error ? "Required field must be filled in." : ""}
-                    />
-                ))}
-            </Box>
-            <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-                <Button type="submit" variant="contained" color="success" disabled={isDisableSubmit}>
-                    Ok
-                </Button>
-                <Button type="reset" variant="contained" color="error">
-                    Cancel
-                </Button>
-            </Stack>
-        </Form>
+        <Formik
+            initialValues={inputs}
+            enableReinitialize
+            validationSchema={validationSchema}
+            onSubmit={onSubmit}
+        >
+            {(formik) => {
+                return (
+                    <Form className="form">
+                        <Box sx={{ mt: 0, mb: 2, "& .MuiTextField-root": { m: 1, width: "25ch" } }}>
+                            {Object.keys(initialFields).map((input) => (
+                                <Field
+                                    as={TextField}
+                                    key={input}
+                                    variant="outlined"
+                                    label={capitalize(input)}
+                                    name={input}
+                                    error={formik.touched[input] && formik.errors[input]}
+                                    helperText={formik.touched[input] && formik.errors[input]}
+                                />
+                            ))}
+                        </Box>
+                        <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                color="success"
+                                disabled={!(formik.isValid && formik.dirty)}
+                            >
+                                Ok
+                            </Button>
+                            <Button variant="contained" color="error" onClick={onReset}>
+                                Cancel
+                            </Button>
+                        </Stack>
+                    </Form>
+                );
+            }}
+        </Formik>
     );
 }
