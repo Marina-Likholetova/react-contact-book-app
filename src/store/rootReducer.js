@@ -1,7 +1,7 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import userReducer from "./slices/users/usersSlice";
-import albumsReducer from "./slices/albums/albumsSlice";
-import photosReducer from "./slices/photos/photosSlice";
+import userReducer from "modules/users/slices/usersSlice";
+import albumsReducer from "modules/albums/slices/albumsSlice";
+import photosReducer from "modules/albums/slices/photosSlice";
 
 
 export default combineReducers({

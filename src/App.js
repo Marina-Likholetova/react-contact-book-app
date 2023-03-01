@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import "./App.css";
-import Navbar from "./components/Navbar/Navbar";
+import Navbar from "modules/common/components/Navbar/Navbar";
 
 const navLinks = ["users", "albums"];
 

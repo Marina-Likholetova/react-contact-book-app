@@ -1,15 +1,14 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
-import UsersPage from "../pages/Users/UsersPage";
-import AlbumsPage from "../pages/Albums/AlbumsPage";
-import NotFoundPage from "../pages/NotFound/NotFoundPage";
-import UserItem from "../components/UserItem/UserItem";
-import ContactForm from "../components/ContactForm/ContactForm";
-import AlbumItem from "../components/AlbumItem/AlbumItem";
-import Index from "../components/Layout/Layout";
-import withUser from "../hoc/withUser";
-import withAddUser from "../hoc/withAddUser";
-
+import Index from "modules/common/components/Layout/Layout"
+import UsersPage from "modules/users/pages/UsersPage";
+import AlbumsPage from "modules/albums/pages/AlbumsPage";
+import NotFoundPage from "modules/common/pages/NotFound/NotFoundPage";
+import UserItem from "modules/users/components/UserItem/UserItem";
+import ContactForm from "modules/users/components/ContactForm/ContactForm";
+import AlbumItem from "modules/albums/components/AlbumItem/AlbumItem";
+import withUser from "modules/users/hoc/withUser";
+import withAddUser from "modules/users/hoc/withAddUser";
 
 const ItemWithUser = withUser(UserItem);
 const FormWithUser = withUser(ContactForm)
