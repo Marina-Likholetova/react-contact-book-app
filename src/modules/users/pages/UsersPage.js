@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Form } from "react-router-dom";
-import { Button } from "@mui/material";
 import Layout from "modules/common/components/Layout/Layout";
 import List from "modules/common/components/List/List";
 import { USERS_PATH } from "modules/common/constants/api";
 import { fetchUsers } from "../slices/usersSlice";
+import NavigationButton from "modules/common/components/buttons/NavigationButton/NavigationButton";
 
 
 
@@ -26,16 +26,8 @@ export default function UsersPage() {
                 <>
                     <List to={USERS_PATH} list={contacts} />
                     <Form action="new">
-                        <Button
-                            variant="outlined"
-                            fullWidth
-                            sx={{ textTransform: "none" }}
-                            type="submit"
-                        >
-                            Add new
-                        </Button>
+                        <NavigationButton label="Add new" />
                     </Form>
-                    
                 </>
             )}
         />

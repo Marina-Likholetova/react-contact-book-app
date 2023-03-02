@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useMatches } from "react-router";
-import { Button } from "@mui/material";
 import Layout from "modules/common/components/Layout/Layout";
 import List from "modules/common/components/List/List";
 import { fetchAlbums } from "../slices/albumsSlice";
 import useNavigation from "modules/common/hooks/useNavigation";
+import NavigationButton from "modules/common/components/buttons/NavigationButton/NavigationButton";
 
 
 export default function AlbumsPage() {
@@ -29,16 +29,12 @@ export default function AlbumsPage() {
                 <>
                     <List to={albumsPath.pathname} list={albums} />
                     {userId && (
-                        <Button
-                            variant="outlined"
-                            fullWidth
-                            sx={{ textTransform: "none" }}
+                        <NavigationButton
+                            label="Back to the user"
                             onClick={() => {
                                 moveToUser(userId);
                             }}
-                        >
-                            Back to the user
-                        </Button>
+                        />
                     )}
                 </>
             )}
