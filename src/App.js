@@ -6,13 +6,14 @@ import Navbar from "modules/common/components/Navbar/Navbar";
 const navLinks = ["users", "albums"];
 
 
-export default function App() {
+export default function App({ theme }) {
     return (
-        <div className="container">
+        <div className={`container ${theme}`}>
             <Navbar navLinks={navLinks} />
-            <main className="main">
-                <Outlet />
-            </main>
+                <main className="main">
+                    <Outlet />
+                </main>
         </div>
+    
     );
 }

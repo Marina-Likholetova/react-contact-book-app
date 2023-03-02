@@ -6,6 +6,7 @@
     --primary: #1976d2;
     --light-bg: #5fa8f01a;
     --text-color: rgb(76, 76, 76);
+    --text-color-dark: #7b7b7b;
     --main-transition: all 0.5s ease-out;
     --spacing-horizontal: 1rem;
     --spacing-vertical: 1rem;
@@ -15,6 +16,7 @@
     --main--padding-vertical: calc(var(--spacing-horizontal) * 0.5);
 
     --navbar-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+    --navbar-shadow-dark: 0 1px 2px 0 rgba(0, 0, 0, 1);
     --navbar-column-gap: 0.25rem;
     --navbar-padding-vertical: calc(var(--spacing-vertical) * 0.75);
     --navbar-padding-horizontal: calc(var(--spacing-horizontal) * 0);
@@ -22,12 +24,15 @@
     --navbar-item-padding-horizontal: 0.75rem;
     --navbar-link-hover-bg: var(--light-bg);
     --navbar-link-active-hover-bg:#dbdfe364;
+    --navbar-link-active-hover-bg-dark: #dbdfe34d;
 
     --sidebar-list-item-padding-vertical:calc(var(--spacing-vertical) * 0.25);
     --sidebar-list-item-padding-horizontal: calc(var(--spacing-horizontal) * 0);
     --sidebar-list-link-padding-vertical: calc(var(--spacing-vertical) * 0);
     --sidebar-list-link-padding-horizontal: calc(var(--spacing-horizontal) * 1);
     --sidebar-list-link-color: var(--text-color);
+    --sidebar-list-link-color-dark: var(--text-color-dark);
+
 
     --album-placeholder-bg: var(--navbar-link-active-hover-bg);
 }
@@ -73,10 +78,26 @@ ul {
     direction: rtl;
 }
 
+.dark .navbar {
+    box-shadow: var(--navbar-shadow-dark);
+}
+
+
+.navbar__inner {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+    column-gap: var(--navbar-column-gap);
+}
+
 .navbar__items {
     display: flex;
-    justify-content: center;
     column-gap: var(--navbar-column-gap);
+}
+
+.navbar__items--right {
+    display: flex;
+    justify-content: center;
 }
 
 
@@ -105,7 +126,7 @@ ul {
 
 .md-content p {
     text-align: center;
-    color: #00000084;
+    color: var(--text-color-dark);
 }
 
 article {
@@ -119,6 +140,10 @@ article::before {
     left: 0;
     height: 100%;
     box-shadow: 0 1px 1px 0.5px rgba(0, 0, 0, 0.1);
+}
+
+.dark article::before {
+    box-shadow: 0 1px 1px 0.5px rgb(0 0 0 / 100%);
 }
 
 .navbar {
@@ -137,6 +162,10 @@ article::before {
     background-color: white;
 }
 
+.dark .navbar::before, .dark .navbar::after {
+    background-color: #121212;
+}
+
 .navbar::before {
     left: 0;
 }
@@ -144,6 +173,10 @@ article::before {
 .navbar::after {
     right: 0;
     transform: translate(50%, 0);
+}
+
+.navbar .navbar__items--right svg {
+    fill: #fbdd46
 }
 
 .loader-container {

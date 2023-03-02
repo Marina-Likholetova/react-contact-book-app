@@ -9,7 +9,10 @@ import ContactForm from "modules/users/components/ContactForm/ContactForm";
 import AlbumItem from "modules/albums/components/AlbumItem/AlbumItem";
 import withUser from "modules/users/hoc/withUser";
 import withAddUser from "modules/users/hoc/withAddUser";
+import withTheme from "modules/common/hoc/withTheme";
 
+
+const AppWithTheme = withTheme(App);
 const ItemWithUser = withUser(UserItem);
 const FormWithUser = withUser(ContactForm)
 const FormWithAddUser = withAddUser(ContactForm)
@@ -18,7 +21,7 @@ const FormWithAddUser = withAddUser(ContactForm)
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <App />,
+        element: <AppWithTheme />,
         errorElement: <NotFoundPage />,
         children: [
             {

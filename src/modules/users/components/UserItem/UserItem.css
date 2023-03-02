@@ -6,17 +6,26 @@
 .user-info__item {
     padding: 0.25rem 0;
     display: block;
-  
-
+    color: var(--text-color);
 }
+  
+.dark .user-info__item {
+    color: var(--text-color-dark);
+}
+
 .user-info__item span {
     border-radius: var(--main-border-radius);
     background-color: var(--navbar-link-active-hover-bg);
     padding: 0.25rem 0.75rem;
     font-size: 12px;
     font-weight: 500;
-    color: var(--text-color);
+}  
+
+.dark .user-info__item:not(:last-child) span {
+    background-color: var(--navbar-link-active-hover-bg-dark);
+    color: rgb(213, 213, 213)
 }
+
 .user-info__item button {
     text-transform: capitalize;
     margin-top: 0.5rem;

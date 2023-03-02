@@ -4,8 +4,6 @@
 .list-item {
     transition: var(--main-transition);
     border-radius: var(--main-border-radius);
-    text-overflow: ellipsis;
-    overflow: hidden;
     user-select: none;
     padding: var(--sidebar-list-item-padding-vertical)  var(--sidebar-list-item-padding-horizontal);
 }
@@ -14,6 +12,12 @@
     color: var(--sidebar-list-link-color);
     padding: var(--sidebar-list-link-padding-vertical) var(--sidebar-list-link-padding-horizontal);
     display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.dark .list__link {
+    color: var(--sidebar-list-link-color-dark);
 }
 
 .list-item:hover {
