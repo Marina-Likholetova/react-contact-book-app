@@ -6,9 +6,8 @@ const validationSchema = yup.object().shape({
     email: yup.string().email("Invalid email").required("Required").trim(),
     phone: yup
         .string()
-        .required("Required")
-        .trim()
-        .matches(/(?=^(\(\d{3}\) \d{3}-\d{4}))/gm, "Invalid phone number"),
+        .required("Required").trim()
+        .matches(/^(?=.*?\d.*?\d.*?\d.*?\d.*?\d.*?\d.*?\d.*?\d.*?\d.*?\d).*$/gm, "Invalid phone number"),
     website: yup.string().nullable(),
 });
 
