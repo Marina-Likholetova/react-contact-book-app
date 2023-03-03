@@ -6,6 +6,7 @@ import useNavigation from "modules/common/hooks/useNavigation";
 import mergeFormInputs from "../../utils/form/mergeFormInputs";
 import initialFields from "../../constants/initialFields";
 import validationSchema from "../../validation/userSchema";
+import MaskedField from "../MaskedField/MaskedField";
 import "./ContactForm.css"
 
 
@@ -44,12 +45,12 @@ export default function ContactForm({ user, onSubmit}) {
                         <Box sx={{ mt: 0, mb: 2, "& .MuiTextField-root": { m: 1, width: "25ch" } }}>
                             {Object.keys(initialFields).map((input) => (
                                 <Field
-                                    as={TextField}
+                                    as={input === "phone" ? MaskedField : TextField}
                                     key={input}
                                     variant="outlined"
                                     label={capitalize(input)}
                                     name={input}
-                                    error={formik.touched[input] && formik.errors[input]}
+                                    error={!!formik.touched[input] && !!formik.errors[input]}
                                     helperText={formik.touched[input] && formik.errors[input]}
                                 />
                             ))}
