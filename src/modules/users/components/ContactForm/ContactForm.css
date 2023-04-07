@@ -1,0 +1,33 @@
+/* .form {
+    width: 100%;
+} */
+
+.form div:first-child {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.form input {
+    color: var(--text-color);
+}
+
+.dark .form input {
+    color: var(--text-color-dark);
+}
+
+input:-internal-autofill-selected, input:-webkit-autofill {
+    -webkit-text-fill-color: var(--text-color);
+}
+
+.dark input:-internal-autofill-selected, .dark input:-webkit-autofill {
+    -webkit-text-fill-color: var(--text-color-dark);
+    -webkit-box-shadow: 0 0 0 30px #131416f5 inset;
+}
+
+input:-internal-autofill-selected {
+    -webkit-box-shadow: 0 0 0 30px #FFFFFF inset;
+}
+
+.dark input:-internal-autofill-selected {
+    -webkit-box-shadow: 0 0 0 30px #121212 inset;
+}
