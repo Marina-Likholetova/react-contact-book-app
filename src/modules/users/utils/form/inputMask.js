@@ -1,7 +1,7 @@
-export default function inputMask(value, name) {
-    let result;
+// export default function inputMask(value, name) {
+//     let result;
 
-    if (name === "phone") {
+//     if (name === "phone") {
         // const x = value
         //     .replace(/\D/g, "")
         //     .match(/(\d{0,2})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
@@ -21,10 +21,10 @@ export default function inputMask(value, name) {
         //     (x[3] ? `) ${x[3]}` : "") +
         //     (x[4] ? `-${x[4]}` : "") +
         //     (x[5] ? `-${x[5]}` : "");
-        result = value.replace(/[a-zA-Z]|[а-яА-Я]|\s/g, "")
-    } else {
-        result = value.replace(/\d/g, "").trim();
-    }
+//         result = value.replace(/[a-zA-Z]|[а-яА-Я]|\s/g, "")
+//     } else {
+//         result = value.replace(/\d/g, "").trim();
+//     }
 
-    return result;
-}
+//     return result;
+// }
